@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const API_BASE_URL = 'http://localhost:3001';
-
 export const loadNotes = createAsyncThunk(
   'notes/loadNotes',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/notes`);
+      const response = await fetch(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/notes`,
+      );
       if (!response.ok) {
         throw new Error('Failed to fetch notes');
       }
@@ -15,20 +15,23 @@ export const loadNotes = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const createNote = createAsyncThunk(
   'notes/createNote',
   async (noteData, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/notes`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/notes`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(noteData),
         },
-        body: JSON.stringify(noteData),
-      });
+      );
       if (!response.ok) {
         throw new Error('Failed to create note');
       }
@@ -37,20 +40,23 @@ export const createNote = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const updateNote = createAsyncThunk(
   'notes/updateNote',
   async ({ id, ...noteData }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/notes/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/notes/${id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(noteData),
         },
-        body: JSON.stringify(noteData),
-      });
+      );
       if (!response.ok) {
         throw new Error('Failed to update note');
       }
@@ -59,16 +65,19 @@ export const updateNote = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 export const removeNote = createAsyncThunk(
   'notes/removeNote',
   async (id, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/notes/${id}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/notes/${id}`,
+        {
+          method: 'DELETE',
+        },
+      );
       if (!response.ok) {
         throw new Error('Failed to delete note');
       }
@@ -76,7 +85,7 @@ export const removeNote = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
 );
 
 const initialState = {
@@ -153,7 +162,7 @@ const notesSlice = createSlice({
         state.isLoading = false;
         const updatedNote = action.payload;
         state.notesList = state.notesList.map((note) =>
-          note._id === updatedNote._id ? updatedNote : note
+          note._id === updatedNote._id ? updatedNote : note,
         );
       })
       .addCase(updateNote.rejected, (state, action) => {
@@ -168,7 +177,7 @@ const notesSlice = createSlice({
       .addCase(removeNote.fulfilled, (state, action) => {
         state.isLoading = false;
         state.notesList = state.notesList.filter(
-          (note) => note._id !== action.payload
+          (note) => note._id !== action.payload,
         );
       })
       .addCase(removeNote.rejected, (state, action) => {
@@ -178,5 +187,6 @@ const notesSlice = createSlice({
   },
 });
 
-export const { updateNoteInput, showModal, hideModal, clearError } = notesSlice.actions;
+export const { updateNoteInput, showModal, hideModal, clearError } =
+  notesSlice.actions;
 export default notesSlice.reducer;

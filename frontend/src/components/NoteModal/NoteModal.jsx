@@ -4,7 +4,7 @@ import { updateNote, hideModal } from '../../redux/notesSlice';
 import { MdClose, MdSave } from 'react-icons/md';
 import styles from './NoteModal.module.css';
 
-export default function NoteModal({ title, content, id, show, onHide }) {
+export default function NoteModal({ title, content, id, show }) {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((state) => state.notes);
   const [editTitle, setEditTitle] = useState(title || '');
@@ -21,11 +21,13 @@ export default function NoteModal({ title, content, id, show, onHide }) {
       return;
     }
 
-    dispatch(updateNote({
-      id,
-      title: editTitle.trim(),
-      content: editContent.trim(),
-    })).then(() => {
+    dispatch(
+      updateNote({
+        id,
+        title: editTitle.trim(),
+        content: editContent.trim(),
+      }),
+    ).then(() => {
       dispatch(hideModal());
     });
   };
@@ -41,11 +43,15 @@ export default function NoteModal({ title, content, id, show, onHide }) {
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
           <h2>Редагувати нотатку</h2>
-          <button className={styles.closeButton} onClick={handleClose} disabled={isLoading}>
+          <button
+            className={styles.closeButton}
+            onClick={handleClose}
+            disabled={isLoading}
+          >
             <MdClose />
           </button>
         </div>
-        
+
         <div className={styles.body}>
           <input
             className={styles.input}
@@ -64,12 +70,20 @@ export default function NoteModal({ title, content, id, show, onHide }) {
             disabled={isLoading}
           />
         </div>
-        
+
         <div className={styles.footer}>
-          <button className={styles.cancelButton} onClick={handleClose} disabled={isLoading}>
+          <button
+            className={styles.cancelButton}
+            onClick={handleClose}
+            disabled={isLoading}
+          >
             Скасувати
           </button>
-          <button className={styles.saveButton} onClick={handleSave} disabled={isLoading}>
+          <button
+            className={styles.saveButton}
+            onClick={handleSave}
+            disabled={isLoading}
+          >
             <MdSave className={styles.icon} />
             {isLoading ? 'Збереження...' : 'Зберегти'}
           </button>
