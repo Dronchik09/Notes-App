@@ -6,7 +6,7 @@ export const initMongoDB = async () => {
   try {
     const user = env('MONGODB_USER');
     const pwd = env('MONGODB_PASSWORD');
-    const url = env('MONGODB_URL');
+    const url = env('MONGODB_CLUSTER_URL');
     const db = env('MONGODB_DB');
 
     await mongoose.connect(
